@@ -6,7 +6,7 @@ export function QzPayload() {
 	const { payloadRef } = useQz()
 
 	return (
-		<div className="w-[57mm]" aria-hidden tabIndex={-1}>
+		<div className="w-[57mm] hidden" aria-hidden tabIndex={-1}>
 			<div
 				ref={payloadRef}
 				style={{

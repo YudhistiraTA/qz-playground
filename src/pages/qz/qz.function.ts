@@ -1,22 +1,22 @@
 import { MutableRefObject } from 'react'
 
-export function QzPrint(payloadRef: MutableRefObject<undefined>) {
+export async function QzPrint(payloadRef: MutableRefObject<undefined>) {
 	const payload = (payloadRef?.current as HTMLElement)?.outerHTML
-	console.log(payload)
+	// const { toPng } = await import('html-to-image')
+	// const payloadPng = await toPng(payloadRef.current)
 	import('qz-tray').then((qz) =>
 		qz.websocket
 			.connect()
 			.then(() => {
-				return qz.printers.find("Microsoft Print to PDF")
-				// return qz.printers.find("POS-58")
+				// return qz.printers.find('Microsoft Print to PDF')
+				return qz.printers.find("POS-58")
 			})
 			.then((printers) => {
-				console.log(printers)
 				const config = qz.configs.create(printers, {
 					size: { width: 57 },
 					units: 'mm',
-					colorType: 'grayscale',
-					margins: {right: 7}
+					margins: { right: 7 },
+					rasterize: "false"
 				})
 				const data = [
 					{
@@ -25,6 +25,12 @@ export function QzPrint(payloadRef: MutableRefObject<undefined>) {
 						flavor: 'plain',
 						data: payload,
 					},
+					// {
+					// 	type: 'pixel',
+					// 	format: 'image',
+					// 	flavor: 'file',
+					// 	data: payloadPng,
+					// },
 				]
 				return qz.print(config, data)
 			})
